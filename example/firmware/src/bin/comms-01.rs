@@ -3,8 +3,8 @@
 
 use defmt::info;
 use embassy_executor::Spawner;
-use embassy_rp::{
-    peripherals::USB,
+use embassy_nrf::{
+    peripherals::USBD,
     usb::{self, Driver, Endpoint, Out},
 };
 
@@ -18,8 +18,9 @@ use postcard_rpc::{
 };
 
 use static_cell::ConstStaticCell;
-use workbook_fw::{get_unique_id, Irqs};
+use workbook_fw::{ Irqs};
 use workbook_icd::PingEndpoint;
+use embassy_nrf::usb::vbus_detect::HardwareVbusDetect;
 
 static ALL_BUFFERS: ConstStaticCell<AllBuffers<256, 256, 256>> =
     ConstStaticCell::new(AllBuffers::new());
@@ -29,7 +30,7 @@ pub struct Context {}
 define_dispatch! {
     dispatcher: Dispatcher<
         Mutex = ThreadModeRawMutex,
-        Driver = usb::Driver<'static, USB>,
+        Driver = usb::Driver<'static, USBD, HardwareVbusDetect>,
         Context = Context
     >;
     PingEndpoint => blocking ping_handler,
@@ -40,12 +41,12 @@ async fn main(spawner: Spawner) {
     // SYSTEM INIT
     info!("Start");
 
-    let mut p = embassy_rp::init(Default::default());
-    let unique_id = get_unique_id(&mut p.FLASH).unwrap();
-    info!("id: {=u64:016X}", unique_id);
+    let mut p = embassy_nrf::init(Default::default());
+    // let unique_id = get_unique_id(&mut p.FLASH).unwrap();
+    // info!("id: {=u64:016X}", unique_id);
 
     // USB/RPC INIT
-    let driver = usb::Driver::new(p.USB, Irqs);
+    let driver = usb::Driver::new(p.USBD, Irqs, HardwareVbusDetect::new(Irqs));
     let mut config = example_config();
     config.manufacturer = Some("OneVariable");
     config.product = Some("ov-twin");
@@ -60,7 +61,7 @@ async fn main(spawner: Spawner) {
 /// This actually runs the dispatcher
 #[embassy_executor::task]
 async fn dispatch_task(
-    ep_out: Endpoint<'static, USB, Out>,
+    ep_out: Endpoint<'static, USBD, Out>,
     dispatch: Dispatcher,
     rx_buf: &'static mut [u8],
 ) {
@@ -69,7 +70,7 @@ async fn dispatch_task(
 
 /// This handles the low level USB management
 #[embassy_executor::task]
-pub async fn usb_task(mut usb: UsbDevice<'static, Driver<'static, USB>>) {
+pub async fn usb_task(mut usb: UsbDevice<'static, Driver<'static, USBD, HardwareVbusDetect >>) {
     usb.run().await;
 }
 

@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-cortex-m                = { version = "0.7.6", features = ["inline-asm"] }
+cortex-m                = { version = "0.7.6", features = ["inline-asm", "critical-section-single-core"] }
 embassy-executor        = { version = "0.5.0", features = ["task-arena-size-32768", "arch-cortex-m", "executor-thread", "executor-interrupt", "defmt", "integrated-timers"] }
-embassy-rp              = { version = "0.1.0", features = ["defmt", "unstable-pac", "time-driver", "critical-section-impl"] }
+embassy-nrf             = { version = "0.1.0", features = [ "defmt", "nrf52840", "time-driver-rtc1", "gpiote", "unstable-pac", "time" ] }
 embassy-sync            = { version = "0.5.0", features = ["defmt"] }
 embassy-time            = { version = "0.3.0", features = ["defmt", "defmt-timestamp-uptime"] }
 embassy-usb             = { version = "0.2.0", features = ["defmt"] }
@@ -40,7 +40,7 @@ incremental = false
 [patch.crates-io]
 embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
 embassy-executor     = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
-embassy-rp           = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
+embassy-nrf          = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
 embassy-sync         = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
 embassy-time         = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
 embassy-usb          = { git = "https://github.com/embassy-rs/embassy", rev = "763b57449fef31b2ca5205542e2c0a52e6b786c1" }
