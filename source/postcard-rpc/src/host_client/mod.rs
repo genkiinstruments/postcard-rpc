@@ -14,6 +14,9 @@ use std::{
 #[cfg(feature = "raw-nusb")]
 mod raw_nusb;
 
+#[cfg(feature = "cross-usb")]
+mod cross_usb;
+
 #[cfg(feature = "cobs-serial")]
 mod serial;
 

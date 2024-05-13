@@ -5,6 +5,8 @@ use postcard_rpc::{
 };
 use workbook_icd::{AccelRange, BadPositionError, GetUniqueIdEndpoint, PingEndpoint, Rgb8, SetAllLedEndpoint, SetSingleLedEndpoint, SingleLed, StartAccel, StartAccelerationEndpoint, StopAccelerationEndpoint};
 
+use cross_usb::device_filter;
+
 pub struct WorkbookClient {
     pub client: HostClient<WireError>,
 }
@@ -38,9 +40,13 @@ impl<T, E> FlattenErr for Result<T, E> {
 // ---
 
 impl WorkbookClient {
-    pub fn new() -> Self {
-        let client =
-            HostClient::new_raw_nusb(|d| d.product_string() == Some("ov-twin"), ERROR_PATH, 8);
+    pub async fn new() -> Self {
+        // let client = HostClient::new_raw_nusb(|d| d.product_string() == Some("ov-twin"), ERROR_PATH, 8);
+        let filters = vec![
+            device_filter!{vendor_id: 0x16c0, product_id: 0x27DD}
+        ];
+
+        let client = HostClient::new_cross_usb(filters, ERROR_PATH, 8).await;
         Self { client }
     }
 
@@ -104,8 +110,8 @@ impl WorkbookClient {
     }
 }
 
-impl Default for WorkbookClient {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+// impl Default for WorkbookClient {
+//     fn default() -> Self {
+//         Self::new()
+//     }
+// }

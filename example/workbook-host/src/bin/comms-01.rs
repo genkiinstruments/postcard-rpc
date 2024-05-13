@@ -5,7 +5,7 @@ use tokio::time::interval;
 
 #[tokio::main]
 pub async fn main() {
-    let client = WorkbookClient::new();
+    let client = WorkbookClient::new().await;
     let mut ticker = interval(Duration::from_millis(250));
 
     for i in 0..10 {

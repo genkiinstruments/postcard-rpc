@@ -3,6 +3,9 @@ name = "workbook-host-client"
 version = "0.1.0"
 edition = "2021"
 
+[dependencies]
+cross_usb = "0.3.2"
+
 [dependencies.workbook-icd]
 path = "../workbook-icd"
 
@@ -11,6 +14,7 @@ version = "0.4"
 features = [
     "use-std",
     "raw-nusb",
+    "cross-usb",
 ]
 
 [dependencies.tokio]
