@@ -4,7 +4,8 @@ use std::{collections::HashMap, sync::Arc};
 // this isn't strictly a *WebUSB* requirement.
 // We could also be e.g. running inside a naked `trunk` app.
 // Also this is the only part of this impl that isn't a generic vec pipe 🤔
-use dioxus_core::prelude::*;
+// use dioxus_core::prelude::*;
+use wasm_bindgen_futures::spawn_local as spawn;
 use postcard::experimental::schema::Schema;
 use serde::de::DeserializeOwned;
 use tokio::sync::{
