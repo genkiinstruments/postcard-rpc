@@ -72,6 +72,7 @@ pub(crate) mod tokio_shared {
 
     /// A [`WireSpawn`] impl using the embassy executor
     #[derive(Clone)]
+    #[allow(unused)]
     pub struct TokioWireSpawn {
         /// handle to the current tokio runtime
         pub rt: runtime::Handle,
@@ -94,6 +95,7 @@ pub(crate) mod tokio_shared {
     }
 
     /// Attempt to spawn the given token
+    #[allow(unused)]
     pub fn tokio_spawn<Sp, F>(sp: &Sp, fut: F) -> Result<(), Sp::Error>
     where
         Sp: WireSpawn<Error = Infallible, Info = runtime::Handle>,
