@@ -39,7 +39,8 @@ postcard-schema = { version = "0.2.2", features = ["derive"] }
 #
 
 # TODO: upstream nusb 0.2 does not build on wasm - there's WIP towards this
-[target.'cfg(not(target_family = "wasm"))'.dependencies.nusb]
+# [target.'cfg(not(target_family = "wasm"))'.dependencies.nusb]
+[dependencies.nusb]
 version = "0.2"
 optional = true
 
@@ -222,7 +223,7 @@ cobs-serial = ["cobs/use_std", "dep:tokio-serial"]
 #
 # Works on: Win, Mac, Linux
 # Does NOT work on: WASM (yet)
-raw-nusb = ["dep:nusb", "use-std", "futures-lite"]
+raw-nusb = ["dep:nusb", "dep:wasm-bindgen-futures", "use-std", "futures-lite"]
 
 # WebUSB support
 #
@@ -293,3 +294,6 @@ futures-lite = ["dep:futures-lite", "nusb/smol"]
 # that feature when `--all-features` is set. This feature is considered unstable
 # and should not be relied upon.
 _docs-fix = ["dep:ssmarshal"]
+
+[patch.crates-io]
+nusb = { git = "https://github.com/genkiinstruments/nusb", branch = "webusb-2" }
