@@ -38,8 +38,9 @@ postcard-schema = { version = "0.2.2", features = ["derive"] }
 # std-only features
 #
 
-# TODO: upstream nusb 0.2 does not build on wasm - there's WIP towards this
-[target.'cfg(not(target_family = "wasm"))'.dependencies.nusb]
+# NOTE: Upstream nusb 0.2 does not yet build on wasm. The `[patch.crates-io]`
+# entry at the bottom of this file points at a fork that adds WebUSB support.
+[dependencies.nusb]
 version = "0.2"
 optional = true
 
@@ -222,7 +223,7 @@ cobs-serial = ["cobs/use_std", "dep:tokio-serial"]
 #
 # Works on: Win, Mac, Linux
 # Does NOT work on: WASM (yet)
-raw-nusb = ["dep:nusb", "use-std", "futures-lite"]
+raw-nusb = ["dep:nusb", "use-std", "futures-lite", "dep:wasm-bindgen-futures"]
 
 # WebUSB support
 #
@@ -293,3 +294,9 @@ futures-lite = ["dep:futures-lite", "nusb/smol"]
 # that feature when `--all-features` is set. This feature is considered unstable
 # and should not be relied upon.
 _docs-fix = ["dep:ssmarshal"]
+
+# Upstream nusb 0.2 does not yet have wasm/WebUSB support. Use a fork that does
+# so the `raw-nusb` and `webusb` features can be built for wasm targets.
+[patch.crates-io]
+nusb = { git = "https://github.com/jkcoxson/nusb", branch = "webusb" }
+usb-gadget = { git = "https://github.com/genkiinstruments/usb-gadget", branch = "fix-iad-ordering" }
