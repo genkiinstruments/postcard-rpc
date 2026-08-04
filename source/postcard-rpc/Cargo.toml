@@ -291,3 +291,6 @@ futures-lite = ["dep:futures-lite", "nusb/smol"]
 # that feature when `--all-features` is set. This feature is considered unstable
 # and should not be relied upon.
 _docs-fix = ["dep:ssmarshal"]
+
+[patch.crates-io]
+usb-gadget = { git = "https://github.com/genkiinstruments/usb-gadget", branch = "fix-iad-ordering" }
